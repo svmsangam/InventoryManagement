@@ -27,4 +27,12 @@ public class ProductService {
         }
         throw  new ProductNotFoundException("Could not find the user");
     }
+
+    public void delete(Integer id) throws ProductNotFoundException {
+        Long count = repo.countById(id);
+        if(count==0 || count == null){
+            throw new ProductNotFoundException("Could not find the user.");
+        }
+        repo.deleteById(id);
+    }
 }

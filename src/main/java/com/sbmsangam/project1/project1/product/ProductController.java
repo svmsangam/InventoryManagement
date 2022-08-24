@@ -42,9 +42,19 @@ public class ProductController {
             model.addAttribute("buttonName","Update");
             return "product_create";
         }catch (ProductNotFoundException e){
-            ra.addFlashAttribute("message","Product has been added successfully");
+            ra.addFlashAttribute("message",e.getMessage());
             return "redirect:/products";
         }
 
+    }
+    @GetMapping("/product/delete/{id}")
+    public String deleteProduct(@PathVariable("id") Integer id, RedirectAttributes ra){
+        try{
+            service.delete(id);
+            ra.addFlashAttribute("message","Product Deleted");
+        }catch (ProductNotFoundException e){
+            ra.addFlashAttribute("message",e.getMessage());
+        }
+        return "redirect:/products";
     }
 }

@@ -35,6 +35,7 @@
                        th:field="*{status}">
                 <label class="form-check-label checkboxLabel" for="flexSwitch" th:if="*{status==true}">Activate</label>
                 <label class="form-check-label checkboxLabel" for="flexSwitch" th:if="*{status==false}">Deactivate</label>
+                <label class="form-check-label checkboxLabel" for="flexSwitch" th:if="*{status==null}">Deactivate</label>
             </div>
         </div>
         <div class="text-center">
