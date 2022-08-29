@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Products</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container-fluid text-center">
+    <div><h2>Manage Sizes</h2></div>
+    <div class="m-2">
+        <a class="h2" th:href="@{'/size/create'}">Add new Size</a>
+    </div>
+    <div th:if="${message}" class="alert alert-success text-center">
+        [[${message}]]
+    </div>
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Size</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="size : ${sizeList}">
+                <tr>
+                    <td>[[${size.id}]]</td>
+                    <td>[[${size.name}]]</td>
+                    <td th:switch="${size.status}">
+                        <button th:case=true type="button" class="btn btn-success">Active</button>
+                        <button th:case=false type="button" class="btn btn-danger">Deactive</button>
+                    </td>
+                    <td>
+                        <a class="h4 mr-3" th:href="@{'/size/edit/'+${size.id}}">Edit</a>
+                        <a class="h4" th:href="@{'/size/delete/'+${size.id}}">Delete</a>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

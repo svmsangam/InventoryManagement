@@ -1,6 +1,13 @@
 package com.sbmsangam.project1.project1.product;
 
+
+
+import com.sbmsangam.project1.project1.ProductAttributes.ProductAttribute;
+
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Entity
 @Table (name = "products")
@@ -12,22 +19,22 @@ public class Product {
     private String name;
     @Column(nullable = false)
     private String sdesc;
-    @Column(nullable = false,name = "detail")
+    @Column(nullable = false)
     private String detail;
+    @Column(columnDefinition = "boolean default false",nullable = false)
     private Boolean status;
-
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    Set<ProductAttribute> productAttribute = new HashSet<>();
     public Product() {
     }
 
-    public Product(Integer id, String name, String shortDesc, String detail, Boolean status) {
+    public Product(String name, String shortDesc, String detail, Boolean status) {
         super();
-        this.id = id;
         this.name = name;
         this.sdesc = shortDesc;
         this.detail = detail;
         this.status = status;
     }
-
     public Integer getId() {
         return id;
     }
@@ -43,7 +50,6 @@ public class Product {
     public void setName(String name) {
         this.name = name;
     }
-
     public String getSdesc() {
         return sdesc;
     }
@@ -51,7 +57,7 @@ public class Product {
     public void setSdesc(String shortDesc) {
         this.sdesc = shortDesc;
     }
-
+    @Column(nullable = false,name = "detail")
     public String getDetail() {
         return detail;
     }
@@ -59,7 +65,6 @@ public class Product {
     public void setDetail(String detail) {
         this.detail = detail;
     }
-
     public Boolean getStatus() {
         return status;
     }
@@ -67,7 +72,13 @@ public class Product {
     public void setStatus(Boolean status) {
         this.status = status;
     }
+    public Set<ProductAttribute> getProductAttribute() {
+        return productAttribute;
+    }
 
+    public void setProductAttribute(Set<ProductAttribute> productAttribute) {
+        this.productAttribute = productAttribute;
+    }
     @Override
     public String toString() {
         return "Product{" +

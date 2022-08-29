@@ -10,38 +10,60 @@
 <body>
 <div class="container-fluid text-center">
     <div><h2>[[${pageTitle}]]</h2></div>
-    <form class="row g-3" method="post" th:action="@{/product/save}" th:object="${product}"
+    <form class="row g-3" method="post" th:action="@{/product/save}"
     style="max-width: 500px; margin: 0 auto;">
-        <input type="hidden" th:field="*{id}">
         <div class="border border-secondary rounded p-3 bg-light">
             <div class="col-md-12 mb-2 form-floating">
-                <input type="text" class="form-control" id="floatingInputName" th:field="*{name}" required>
+                <input type="text" class="form-control" id="floatingInputName" th:field="${product.name}" required>
                 <label for="floatingInputName">Product Name</label>
             </div>
             <div class="col-md-12 mb-2 form-floating">
                 <textarea class="form-control" placeholder="Leave a comment here"
-                          id="floatingTextareaSD" th:field="*{sdesc}" required>
+                          id="floatingTextareaSD" th:field="${product.sdesc}" required>
                 </textarea>
                 <label for="floatingTextareaSD">Short Description</label>
             </div>
             <div class="col-md-12 mb-2 form-floating">
                 <textarea class="form-control" placeholder="Leave a comment here"
-                          id="floatingTextareaDetail" th:field="*{detail}" style="height: 100px" required>
+                          id="floatingTextareaDetail" th:field="${product.detail}" style="height: 100px" required>
                 </textarea>
                 <label for="floatingTextareaDetail">Product Details</label>
             </div>
             <div class="form-check form-switch col-md-4">
                 <input class="form-check-input" type="checkbox" id="flexSwitch" name="checkbox_status"
-                       th:field="*{status}">
-                <label class="form-check-label checkboxLabel" for="flexSwitch" th:if="*{status==true}">Activate</label>
-                <label class="form-check-label checkboxLabel" for="flexSwitch" th:if="*{status==false}">Deactivate</label>
-                <label class="form-check-label checkboxLabel" for="flexSwitch" th:if="*{status==null}">Deactivate</label>
+                       th:field="${product.status}">
+                <label class="form-check-label checkboxLabel" for="flexSwitch" th:if="${product.status==true}">Activate</label>
+                <label class="form-check-label checkboxLabel" for="flexSwitch" th:if="${product.status==false}">Deactivate</label>
+                <label class="form-check-label checkboxLabel" for="flexSwitch" th:if="${product.status==null}">Deactivate</label>
             </div>
+        </div>
+        <div class="border border-secondary rounded p-3 bg-light">
+            <label class="col-form-label">Size</label>
+                <div class="col-md-12 mb-2">
+                    <select class="form-control" th:field="${attribute.size}">
+                    <th:block th:each="size: ${sizeList}">
+                        <option th:text="${size.name}" th:value="${size.id}"/>
+                    </th:block>
+                    </select>
+                </div>
+                <div class="col-md-12 mb-2">
+                    <label for="productQty" class="form-label">Quantity</label>
+                    <input type="text" class="form-control" id="productQty" th:field="${attribute.quantity}" required>
+                </div>
+                <div class="col-md-12 mb-2">
+                    <label for="productMrp" class="form-label">MRP</label>
+                    <input type="text" class="form-control" id="productMrp" th:field="${attribute.mrp}" required>
+                </div>
+                <div class="col-md-12 mb-2">
+                    <label for="productPrice" class="form-label">Price</label>
+                    <input type="text" class="form-control" id="productPrice" th:field="${attribute.price}" required>
+                </div>
         </div>
         <div class="text-center">
             <button type="submit" class="btn btn-primary m-2">[[${buttonName}]]</button>
             <button type="button" class="btn btn-secondary m-2" onclick="cancelForm()">Cancel</button>
         </div>
+        <input type="hidden" th:field="${product.id}">
     </form>
 </div>
 </body>

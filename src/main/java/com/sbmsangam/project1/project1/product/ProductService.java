@@ -1,7 +1,6 @@
 package com.sbmsangam.project1.project1.product;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,13 +24,13 @@ public class ProductService {
         if(product.isPresent()){
             return product.get();
         }
-        throw  new ProductNotFoundException("Could not find the user");
+        throw  new ProductNotFoundException("Could not find the product");
     }
 
     public void delete(Integer id) throws ProductNotFoundException {
         Long count = repo.countById(id);
         if(count==0 || count == null){
-            throw new ProductNotFoundException("Could not find the user.");
+            throw new ProductNotFoundException("Could not find the product.");
         }
         repo.deleteById(id);
     }
