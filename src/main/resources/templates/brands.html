@@ -7,9 +7,9 @@
 </head>
 <body>
 <div class="container-fluid text-center">
-    <div><h2>Manage Sizes</h2></div>
+    <div><h2>Manage Brands</h2></div>
     <div class="m-2">
-        <a class="h2" th:href="@{'/size/create'}">Add new Size</a>
+        <a class="h2" th:href="@{'/brand/create'}">Add new Brand</a>
     </div>
     <div th:if="${message}" class="alert alert-success text-center">
         [[${message}]]
@@ -19,23 +19,23 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th>Size</th>
+                <th>Brand</th>
                 <th>Status</th>
                 <th></th>
             </tr>
             </thead>
             <tbody>
-            <th:block th:each="size : ${sizeList}">
+            <th:block th:each="brand : ${brandList}">
                 <tr>
-                    <td>[[${size.id}]]</td>
-                    <td>[[${size.name}]]</td>
-                    <td th:switch="${size.status}">
+                    <td>[[${brand.id}]]</td>
+                    <td>[[${brand.name}]]</td>
+                    <td th:switch="${brand.status}">
                         <button th:case=true type="button" class="btn btn-success">Active</button>
                         <button th:case=false type="button" class="btn btn-danger">Deactive</button>
                     </td>
                     <td>
-                        <a class="h4 mr-3" th:href="@{'/size/edit/'+${size.id}}">Edit</a>
-                        <a class="h4" th:href="@{'/size/delete/'+${size.id}}">Delete</a>
+                        <a class="h4 mr-3" th:href="@{'/brand/edit/'+${brand.id}}">Edit</a>
+                        <a class="h4" th:href="@{'/brand/delete/'+${brand.id}}">Delete</a>
                     </td>
                 </tr>
             </th:block>

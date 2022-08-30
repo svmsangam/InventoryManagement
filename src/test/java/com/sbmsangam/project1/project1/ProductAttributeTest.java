@@ -1,7 +1,7 @@
 package com.sbmsangam.project1.project1;
 
-import com.sbmsangam.project1.project1.ProductAttributes.ProductAttribute;
-import com.sbmsangam.project1.project1.ProductAttributes.ProductAttributeRepository;
+import com.sbmsangam.project1.project1.attributes.ProductAttribute;
+import com.sbmsangam.project1.project1.attributes.ProductAttributeRepository;
 import com.sbmsangam.project1.project1.product.Product;
 import com.sbmsangam.project1.project1.product.ProductRepository;
 import com.sbmsangam.project1.project1.size.Size;

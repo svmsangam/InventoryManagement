@@ -1,4 +1,4 @@
-package com.sbmsangam.project1.project1.ProductAttributes;
+package com.sbmsangam.project1.project1.attributes;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

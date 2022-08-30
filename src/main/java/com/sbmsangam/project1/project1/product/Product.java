@@ -2,7 +2,8 @@ package com.sbmsangam.project1.project1.product;
 
 
 
-import com.sbmsangam.project1.project1.ProductAttributes.ProductAttribute;
+import com.sbmsangam.project1.project1.attributes.ProductAttribute;
+import com.sbmsangam.project1.project1.brand.Brand;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -23,8 +24,11 @@ public class Product {
     private String detail;
     @Column(columnDefinition = "boolean default false",nullable = false)
     private Boolean status;
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     Set<ProductAttribute> productAttribute = new HashSet<>();
+    @OneToOne
+    @JoinColumn(name = "brand_id",referencedColumnName = "id")
+    private Brand brand;
     public Product() {
     }
 
@@ -78,6 +82,13 @@ public class Product {
 
     public void setProductAttribute(Set<ProductAttribute> productAttribute) {
         this.productAttribute = productAttribute;
+    }
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
     }
     @Override
     public String toString() {

@@ -1,4 +1,4 @@
-package com.sbmsangam.project1.project1.ProductAttributes;
+package com.sbmsangam.project1.project1.attributes;
 
 import com.sbmsangam.project1.project1.product.Product;
 import com.sbmsangam.project1.project1.size.Size;

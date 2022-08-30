@@ -1,6 +1,6 @@
 package com.sbmsangam.project1.project1.size;
 
-import com.sbmsangam.project1.project1.ProductAttributes.ProductAttribute;
+import com.sbmsangam.project1.project1.attributes.ProductAttribute;
 
 import javax.persistence.*;
 import java.util.HashSet;
