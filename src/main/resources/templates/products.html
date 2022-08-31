@@ -10,6 +10,16 @@
     <div><h2>Manage Products</h2></div>
     <div class="m-2">
         <a class="h2" th:href="@{'/product/create'}">Add new Product</a>
+        <div class="p-2 mt-2">
+        <form th:action="@{'/products'}">
+            Filter:
+            <input type="text" name="name" th:value="${keyword}" required/>
+            &nbsp;
+            <input type="submit" value="Search"/>
+            &nbsp;
+            <input type="button" value="clear" onclick="clearFilter()"/>
+        </form>
+        </div>
     </div>
     <div th:if="${message}" class="alert alert-success text-center">
         [[${message}]]
@@ -22,6 +32,7 @@
                 <th>Name</th>
                 <th>Short Description</th>
                 <th>Product Detail</th>
+                <th>Brand</th>
                 <th>Status</th>
                 <th></th>
             </tr>
@@ -33,6 +44,7 @@
                         <td>[[${product.name}]]</td>
                         <td>[[${product.sdesc}]]</td>
                         <td>[[${product.detail}]]</td>
+                        <td>[[${product.brand}]]</td>
                         <td th:switch="${product.status}">
                             <button th:case=true type="button" class="btn btn-success">Active</button>
                             <button th:case=false type="button" class="btn btn-danger">Deactive</button>
@@ -49,12 +61,26 @@
     <div>
         Total Items: [[${totalItems}]] - Page[[${currentPage}]] of [[${totalPages}]]
         <br>
+        <a th:if="${currentPage>1}" th:href="@{'/page/1'}">First</a>
+        <span th:unless="${currentPage>1}">First</span>&nbsp;
+        <a th:if="${currentPage>1}" th:href="@{'/page/'+${currentPage- 1}}">Prev</a>
+        <span th:unless="${currentPage > 1}">Prev</span>&nbsp;
         <span th:each="i : ${#numbers.sequence(1,totalPages)} ">
             <a th:if="${ i!= currentPage}" th:href="@{'/page/'+${i}}">[[${i}]]</a>
             <span th:unless="${ i!= currentPage}">[[${i}]]</span>
             &nbsp;&nbsp;
         </span>
+        &nbsp;<a th:if="${currentPage < totalPages}" th:href="@{'/page/'+${currentPage + 1}}">Next</a>
+        <span th:unless="${currentPage < totalPages}">Next</span>&nbsp;
+        &nbsp;<a th:if="${currentPage < totalPages}" th:href="@{'/page/'+${totalPages}}">Last</a>
+        <span th:unless="${currentPage < totalPages}">Last</span>&nbsp;
     </div>
 </div>
 </body>
+<script type="text/javascript">
+    function clearFilter(){
+        window.location = '/products';
+    }
+
+</script>
 </html>

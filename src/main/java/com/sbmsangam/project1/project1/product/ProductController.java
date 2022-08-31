@@ -1,7 +1,6 @@
 package com.sbmsangam.project1.project1.product;
 
 import com.sbmsangam.project1.project1.attributes.ProductAttribute;
-import com.sbmsangam.project1.project1.attributes.ProductAttributeNotFoundException;
 import com.sbmsangam.project1.project1.attributes.ProductAttributeService;
 import com.sbmsangam.project1.project1.brand.Brand;
 import com.sbmsangam.project1.project1.brand.BrandService;
@@ -9,6 +8,7 @@ import com.sbmsangam.project1.project1.size.Size;
 import com.sbmsangam.project1.project1.size.SizeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.Set;
+
 
 @Controller
 public class ProductController {
@@ -28,12 +28,12 @@ public class ProductController {
     @Autowired private BrandService brandService;
 
     @GetMapping("/products")
-    public String showProductList(Model model){
-        return listByPage(model,1);
+    public String showProductList(Model model,@Param("name") String name){
+        return listByPage(model,1,name);
     }
     @GetMapping("page/{pageNumber}")
-    public String listByPage(Model model, @PathVariable("pageNumber") int currentPage){
-        Page<Product> page  = service.listAll(currentPage);
+    public String listByPage(Model model, @PathVariable("pageNumber") int currentPage, String keyword){
+        Page<Product> page  = service.listAll(currentPage,keyword);
         List<Product> productList = page.getContent();
         long totalItems = page.getTotalElements();
         int totalPages = page.getTotalPages();
@@ -41,6 +41,7 @@ public class ProductController {
         model.addAttribute("totalItems",totalItems);
         model.addAttribute("totalPages",totalPages);
         model.addAttribute("currentPage",currentPage);
+        model.addAttribute("keyword",keyword);
         return "products";
     }
     @GetMapping("/product/create")
