@@ -8,6 +8,7 @@ import com.sbmsangam.project1.project1.brand.BrandService;
 import com.sbmsangam.project1.project1.size.Size;
 import com.sbmsangam.project1.project1.size.SizeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,12 +26,21 @@ public class ProductController {
     @Autowired private SizeService sizeService;
     @Autowired private ProductAttributeService productAttributeService;
     @Autowired private BrandService brandService;
-    @Autowired private ProductRepository repo;
 
     @GetMapping("/products")
     public String showProductList(Model model){
-        List<Product> productList = service.listAll();
+        return listByPage(model,1);
+    }
+    @GetMapping("page/{pageNumber}")
+    public String listByPage(Model model, @PathVariable("pageNumber") int currentPage){
+        Page<Product> page  = service.listAll(currentPage);
+        List<Product> productList = page.getContent();
+        long totalItems = page.getTotalElements();
+        int totalPages = page.getTotalPages();
         model.addAttribute("productList",productList);
+        model.addAttribute("totalItems",totalItems);
+        model.addAttribute("totalPages",totalPages);
+        model.addAttribute("currentPage",currentPage);
         return "products";
     }
     @GetMapping("/product/create")

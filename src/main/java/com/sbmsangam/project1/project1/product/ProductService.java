@@ -2,6 +2,9 @@ package com.sbmsangam.project1.project1.product;
 
 import com.sbmsangam.project1.project1.attributes.ProductAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +15,9 @@ import java.util.Set;
 public class ProductService {
     @Autowired private ProductRepository repo;
 
-    public List<Product> listAll(){
-        return (List<Product>) repo.findAll();
+    public Page<Product> listAll(int pageNumber){
+        Pageable pageable = PageRequest.of(pageNumber - 1,5);
+        return repo.findAll(pageable);
     }
 
 

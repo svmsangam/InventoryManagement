@@ -1,30 +1,43 @@
 package com.sbmsangam.project1.project1;
 
+import com.sbmsangam.project1.project1.attributes.ProductAttribute;
 import com.sbmsangam.project1.project1.product.Product;
 import com.sbmsangam.project1.project1.product.ProductRepository;
+import com.sbmsangam.project1.project1.size.Size;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManagerAutoConfiguration;
 import org.springframework.test.annotation.Rollback;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Rollback(false)
 public class ProductRepositoryTest {
     @Autowired private ProductRepository repo;
+    @Autowired private TestEntityManager entityManager;
 
     @Test
     public void testAddNew(){
-        for (int i = 0;i<=10;i++) {
+        for (int i = 0;i<=20;i++) {
             Product product = new Product();
             product.setName("Product"+(i+1));
             product.setSdesc("Product: "+(i+1));
             product.setDetail("This is a test for inserting product "+(i+1));
             product.setStatus(true);
+            Size size = entityManager.find(Size.class,1);
+            ProductAttribute productAttribute = new ProductAttribute(10+i,20+i,40+i,product,
+                    size);
+            Set<ProductAttribute> attributeSet = new HashSet<>();
+            attributeSet.add(productAttribute);
+            product.setProductAttribute(attributeSet);
             Product savedProduct = repo.save(product);
 
             Assertions.assertThat(savedProduct).isNotNull();
