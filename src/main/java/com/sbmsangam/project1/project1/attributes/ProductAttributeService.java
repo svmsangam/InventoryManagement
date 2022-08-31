@@ -1,5 +1,6 @@
 package com.sbmsangam.project1.project1.attributes;
 
+import com.sbmsangam.project1.project1.product.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,9 @@ public class ProductAttributeService {
             throw new ProductAttributeNotFoundException("Could not find the product.");
         }
         repo.deleteById(id);
+    }
+    public ProductAttribute getProductAttributeByProduct(Product product){
+        return repo.getProductAttributesByProduct(product);
     }
 
 }

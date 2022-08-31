@@ -57,7 +57,7 @@ public class ProductController {
     public String showEditForm(@PathVariable("id") Integer id, Model model, RedirectAttributes ra){
         try{
             Product product = service.get(id);
-            ProductAttribute attribute = productAttributeService.get(id);
+            ProductAttribute attribute = productAttributeService.getProductAttributeByProduct(product);
             List<Size> sizeList = sizeService.listAll();
             List<Brand> brandList = brandService.listAll();
             model.addAttribute("sizeList",sizeList);
@@ -68,9 +68,6 @@ public class ProductController {
             model.addAttribute("buttonName","Update");
             return "product_create";
         }catch (ProductNotFoundException e){
-            ra.addFlashAttribute("message",e.getMessage());
-            return "redirect:/products";
-        }catch (ProductAttributeNotFoundException e){
             ra.addFlashAttribute("message",e.getMessage());
             return "redirect:/products";
         }

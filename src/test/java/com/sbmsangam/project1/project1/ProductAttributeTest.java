@@ -40,7 +40,6 @@ public class ProductAttributeTest {
         public void testProdAttribAdd(){
             Product product = entityManager.find(Product.class,1);
             Size size = entityManager.find(Size.class,1);
-
             ProductAttribute productAttribute = new ProductAttribute(100,110,20,product,size);
             prodAttributeRepo.save(productAttribute);
 
