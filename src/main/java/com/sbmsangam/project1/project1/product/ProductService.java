@@ -15,11 +15,8 @@ import java.util.Set;
 public class ProductService {
     @Autowired private ProductRepository repo;
 
-    public Page<Product> listAll(int pageNumber, String keyword){
+    public Page<Product> listAll(int pageNumber){
         Pageable pageable = PageRequest.of(pageNumber - 1,5);
-        if(keyword != null){
-            return repo.findAll(keyword,pageable);
-        }
         return repo.findAll(pageable);
     }
 
@@ -43,5 +40,8 @@ public class ProductService {
         }
         repo.deleteById(id);
     }
-
+    public Page<Product> listAllSearch(int pageNumber,String keyword){
+        Pageable pageable = PageRequest.of(pageNumber - 1,5);
+        return repo.findAllByName(keyword,pageable);
+    }
 }

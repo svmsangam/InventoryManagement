@@ -13,6 +13,6 @@ public interface ProductRepository extends PagingAndSortingRepository<Product,In
     @Query("SELECT p from Product p where " +
             "CONCAT(p.id,p.name,p.detail,p.sdesc,p.brand.name)" +
             " LIKE %?1%")
-    public Page<Product> findAll(String keyword, Pageable pageable);
+    public Page<Product> findAllByName(String keyword, Pageable pageable);
 
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -31,9 +32,18 @@ public class ProductController {
     public String showProductList(Model model,@Param("name") String name){
         return listByPage(model,1,name);
     }
-    @GetMapping("page/{pageNumber}")
-    public String listByPage(Model model, @PathVariable("pageNumber") int currentPage, String keyword){
-        Page<Product> page  = service.listAll(currentPage,keyword);
+    @GetMapping("page/{pageNumber}/{keyword}")
+    public String listByPage(Model model,
+             @PathVariable("pageNumber") int currentPage,
+             @PathVariable("keyword") String keyword
+            )
+    {
+        Page<Product> page;
+        if(keyword==null) {
+            page = service.listAll(currentPage);
+        }else{
+            page = service.listAllSearch(currentPage,keyword);
+        }
         List<Product> productList = page.getContent();
         long totalItems = page.getTotalElements();
         int totalPages = page.getTotalPages();
