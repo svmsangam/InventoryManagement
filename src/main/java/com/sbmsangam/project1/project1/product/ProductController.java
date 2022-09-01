@@ -30,7 +30,10 @@ public class ProductController {
 
     @GetMapping("/products")
     public String showProductList(Model model,@Param("name") String name){
-        return listByPage(model,1,name);
+        if(name !=null) {
+            return listByPage(model, 1, name);
+        }
+        return listByPage(model,1);
     }
     @GetMapping("page/{pageNumber}/{keyword}")
     public String listByPage(Model model,
@@ -38,12 +41,7 @@ public class ProductController {
              @PathVariable("keyword") String keyword
             )
     {
-        Page<Product> page;
-        if(keyword==null) {
-            page = service.listAll(currentPage);
-        }else{
-            page = service.listAllSearch(currentPage,keyword);
-        }
+        Page<Product> page= service.listAllSearch(currentPage,keyword);
         List<Product> productList = page.getContent();
         long totalItems = page.getTotalElements();
         int totalPages = page.getTotalPages();
@@ -52,6 +50,20 @@ public class ProductController {
         model.addAttribute("totalPages",totalPages);
         model.addAttribute("currentPage",currentPage);
         model.addAttribute("keyword",keyword);
+        return "products";
+    }
+    @GetMapping("page/{pageNumber}")
+    public String listByPage(Model model,
+                             @PathVariable("pageNumber") int currentPage)
+    {
+        Page<Product> page = service.listAll(currentPage);
+        List<Product> productList = page.getContent();
+        long totalItems = page.getTotalElements();
+        int totalPages = page.getTotalPages();
+        model.addAttribute("productList",productList);
+        model.addAttribute("totalItems",totalItems);
+        model.addAttribute("totalPages",totalPages);
+        model.addAttribute("currentPage",currentPage);
         return "products";
     }
     @GetMapping("/product/create")

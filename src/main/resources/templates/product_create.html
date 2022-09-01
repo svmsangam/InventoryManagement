@@ -12,7 +12,7 @@
     <div><h2>[[${pageTitle}]]</h2></div>
     <form class="row g-3" method="post" th:action="@{/product/save}"
     style="max-width: 500px; margin: 0 auto;">
-        <div class="border border-secondary rounded p-3 bg-light">
+        <div class="border border-secondary rounded p-3 bg-light main-wrapper">
             <div class="col-md-12 mb-2 form-floating">
                 <input type="text" class="form-control" id="floatingInputName" th:field="${product.name}" required>
                 <label for="floatingInputName">Product Name</label>
@@ -45,27 +45,40 @@
                 <label class="form-check-label checkboxLabel" for="flexSwitch" th:if="${product.status==null}">Deactivate</label>
             </div>
         </div>
-        <div class="border border-secondary rounded p-3 bg-light">
-            <label class="col-form-label">Size</label>
-                <div class="col-md-12 mb-2">
-                    <select class="form-control" th:field="${attribute.size}">
-                    <th:block th:each="size: ${sizeList}">
-                        <option th:text="${size.name}" th:value="${size.id}"/>
-                    </th:block>
-                    </select>
+        <div class="border border-secondary rounded p-3 bg-light" id="product_attr_box" th:with="loop_count = 0">
+            <div  class="card mb-2" th:id="'product_attr_'+${loop_count+1}">
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="productSize" class="control-label mb-1"> Size</label>
+                                <select id="productSize" class="form-control" th:field="${attribute.size}">
+                                    <th:block th:each="size: ${sizeList}">
+                                        <option th:text="${size.name}" th:value="${size.id}"/>
+                                    </th:block>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="productQty" class="control-label mb-1">Quantity</label>
+                                <input type="text" class="form-control" id="productQty" th:field="${attribute.quantity}" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="productMrp" class="control-label mb-1">MRP</label>
+                                <input type="text" class="form-control" id="productMrp" th:field="${attribute.mrp}" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="productPrice" class="control-label mb-1">Price</label>
+                                <input type="text" class="form-control" id="productPrice" th:field="${attribute.price}" required>
+                            </div>
+                            <div class="col-md-4 mt-4">
+                                <label class="control-label mb-1">Action</label>
+                                <button type="button" class="btn btn-success btn-md" onclick="add_more()">
+                                    <i class="fa fa-plus">&nbsp;Add</i></button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-12 mb-2">
-                    <label for="productQty" class="form-label">Quantity</label>
-                    <input type="text" class="form-control" id="productQty" th:field="${attribute.quantity}" required>
-                </div>
-                <div class="col-md-12 mb-2">
-                    <label for="productMrp" class="form-label">MRP</label>
-                    <input type="text" class="form-control" id="productMrp" th:field="${attribute.mrp}" required>
-                </div>
-                <div class="col-md-12 mb-2">
-                    <label for="productPrice" class="form-label">Price</label>
-                    <input type="text" class="form-control" id="productPrice" th:field="${attribute.price}" required>
-                </div>
+            </div>
         </div>
         <div class="text-center">
             <button type="submit" class="btn btn-primary m-2">[[${buttonName}]]</button>
@@ -86,5 +99,46 @@
     });
     function cancelForm(){
         window.location = "[[@{/products}]]"
+    }
+    var count = 1;
+    function add_more(){
+        count++;
+        var html='<div  class="card mb-2" id="product_attr_'+count+'">\n' +
+        '                <div class="card-body">\n' +
+        '                    <div class="form-group">\n' +
+        '                        <div class="row">\n' ;
+        var productSize = jQuery('#productSize').html();
+        productSize = productSize.replace("selected","");
+        html+=                           '<div class="col-md-4">\n'+
+        '                                <label for="productSize" class="control-label mb-1"> Size</label>\n'+
+        '                                <select id="productSize" class="form-control" name="size">\n' +
+                                            productSize +
+        '                                </select>\n' +
+        '                            </div>\n' +
+        '                            <div class="col-md-4">\n' +
+        '                                <label for="productQty" class="control-label mb-1">Quantity</label>\n' +
+        '                                <input type="text" class="form-control" id="productQty" th:field="quantity" th:value="" required>\n' +
+        '                            </div>\n' +
+        '                            <div class="col-md-4">\n' +
+        '                                <label for="productMrp" class="control-label mb-1">MRP</label>\n' +
+        '                                <input type="text" class="form-control" id="productMrp" th:field="mrp" th:value=""required>\n' +
+        '                            </div>\n' +
+        '                            <div class="col-md-4">\n' +
+        '                                <label for="productPrice" class="control-label mb-1">Price</label>\n' +
+        '                                <input type="text" class="form-control" id="productPrice" th:field="price" th:value="" required>\n' +
+        '                            </div>\n' +
+        '                            <div class="col-md-4 mt-4">\n' +
+        '                                <label class="control-label mb-1">Action</label>\n' +
+        '                                <button type="button" class="btn btn-danger btn-md" onclick=remove_more("'+count+'")>\n' +
+        '                                    <i class="fa fa-plus">&nbsp;Remove</i></button>\n' +
+        '                            </div>\n' +
+        '                        </div>\n' +
+        '                    </div>\n' +
+        '                </div>\n' +
+        '            </div>';
+        jQuery('#product_attr_box').append(html);
+    }
+    function remove_more(loop_count){
+        jQuery('#product_attr_'+loop_count).remove();
     }
 </script>
