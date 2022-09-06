@@ -18,12 +18,14 @@ public class Product {
     private Integer id;
     @Column(nullable = false)
     private String name;
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT",nullable = false)
     private String sdesc;
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT",nullable = false)
     private String detail;
     @Column(columnDefinition = "boolean default false",nullable = false)
     private Boolean status;
+    @Column(length = 45,nullable = true)
+    private String image;
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     Set<ProductAttribute> productAttribute = new HashSet<>();
     @OneToOne
@@ -76,6 +78,15 @@ public class Product {
     public void setStatus(Boolean status) {
         this.status = status;
     }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public Set<ProductAttribute> getProductAttribute() {
         return productAttribute;
     }
@@ -90,6 +101,13 @@ public class Product {
     public void setBrand(Brand brand) {
         this.brand = brand;
     }
+    @Transient
+    public String getImagePath(){
+        if(image == null || id == null) return null;
+
+        return "/product-image"+"/"+id+"/"+image;
+    }
+
     @Override
     public String toString() {
         return "Product{" +

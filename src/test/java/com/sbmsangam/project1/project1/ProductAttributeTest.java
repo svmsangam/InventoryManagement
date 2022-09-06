@@ -6,12 +6,15 @@ import com.sbmsangam.project1.project1.product.Product;
 import com.sbmsangam.project1.project1.product.ProductRepository;
 import com.sbmsangam.project1.project1.size.Size;
 import com.sbmsangam.project1.project1.size.SizeRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.Rollback;
+
+import java.util.Set;
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @DataJpaTest
@@ -44,6 +47,16 @@ public class ProductAttributeTest {
             prodAttributeRepo.save(productAttribute);
 
         }
+        @Test
+        public void getProductAttribute(){
+//            Product product = entityManager.find(Product.class,5);
+//            Set<ProductAttribute> attributes = product.getProductAttribute();
+//            Assertions.assertThat(attributes).hasSizeGreaterThan(0);
+//            for (ProductAttribute attribute: attributes){
+//                System.out.println(attribute);
+//            }
+        }
+
 
 
 }

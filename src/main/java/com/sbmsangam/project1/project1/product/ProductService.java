@@ -21,9 +21,9 @@ public class ProductService {
     }
 
 
-    public void save(Product product) {
+    public Product save(Product product) {
         repo.save(product);
-
+        return product;
     }
     public Product get(Integer id) throws ProductNotFoundException {
         Optional<Product> product = repo.findById(id);

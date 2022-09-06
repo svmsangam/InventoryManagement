@@ -5,26 +5,32 @@
     <meta charset="UTF-8">
     <title>[[${pageTitle}]]</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+<!--    <link rel="stylesheet" type="text/css" th:href="@{/richtext/richtext.min.css}">-->
+<!--    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">-->
+    <script th:src="@{custom.js}"></script>
     <script th:src="@{/webjars/jquery/jquery.js}"></script>
+    <script th:src="@{/webjars/jquery/jquery.js}"></script>
+    <script th:src="@{/ckeditor/ckeditor.js}"></script>
 </head>
 <body>
 <div class="container-fluid text-center">
     <div><h2>[[${pageTitle}]]</h2></div>
     <form class="row g-3" method="post" th:action="@{/product/save}"
-    style="max-width: 500px; margin: 0 auto;">
+    style="max-width: 500px; margin: 0 auto;" enctype="multipart/form-data">
         <div class="border border-secondary rounded p-3 bg-light main-wrapper">
             <div class="col-md-12 mb-2 form-floating">
                 <input type="text" class="form-control" id="floatingInputName" th:field="${product.name}" required>
                 <label for="floatingInputName">Product Name</label>
             </div>
             <div class="col-md-12 mb-2 form-floating">
-                <textarea class="form-control" placeholder="Leave a comment here"
-                          id="floatingTextareaSD" th:field="${product.sdesc}" required>
+                <label class="mb-1" for="floatingTextareaSD">Short Description</label>
+                <textarea class="form-control text_area_editor"
+                          id="floatingTextareaSD" th:field="${product.sdesc}" placeholder="Short Description..." required>
                 </textarea>
-                <label for="floatingTextareaSD">Short Description</label>
             </div>
             <div class="col-md-12 mb-2 form-floating">
-                <textarea class="form-control" placeholder="Leave a comment here"
+                <textarea class="form-control text_area_editor"
                           id="floatingTextareaDetail" th:field="${product.detail}" style="height: 100px" required>
                 </textarea>
                 <label for="floatingTextareaDetail">Product Details</label>
@@ -37,6 +43,14 @@
                     </th:block>
                 </select>
             </div>
+            <div class="col-md-12 input-group">
+                <input type="file" class="form-control" id="productImage" name="fileImage"
+                       accept="image/png,image/jpeg">
+            </div>
+            <div  class="col-md-6 mt-2 mb-2 p-image">
+                <img th:if="@{${product.imagePath} != null}"  th:src="@{${product.imagePath}}" class="thumbnail" alt="Image Preview">
+                <img th:unless="@{${product.imagePath} != null}" class="thumbnail" alt="Image Preview">
+            </div>
             <div class="form-check form-switch col-md-4">
                 <input class="form-check-input" type="checkbox" id="flexSwitch" name="checkbox_status"
                        th:field="${product.status}">
@@ -46,6 +60,7 @@
             </div>
         </div>
         <div class="border border-secondary rounded p-3 bg-light" id="product_attr_box" th:with="loop_count = 0">
+<!--            <th:block th:each="attribute : ${attribute}">-->
             <div  class="card mb-2" th:id="'product_attr_'+${loop_count+1}">
                 <div class="card-body">
                     <div class="form-group">
@@ -78,7 +93,9 @@
                         </div>
                     </div>
                 </div>
+
             </div>
+<!--            </th:block>-->
         </div>
         <div class="text-center">
             <button type="submit" class="btn btn-primary m-2">[[${buttonName}]]</button>
@@ -90,6 +107,10 @@
 </body>
 </html>
 <script>
+    $(document).ready(function () {
+        CKEDITOR.replace( 'sdesc' );
+        CKEDITOR.replace( 'detail' );
+    });
     $("#flexSwitch").change(function() {
         if(this.checked) {
            $('.checkboxLabel').html("Activate");
@@ -117,15 +138,15 @@
         '                            </div>\n' +
         '                            <div class="col-md-4">\n' +
         '                                <label for="productQty" class="control-label mb-1">Quantity</label>\n' +
-        '                                <input type="text" class="form-control" id="productQty" th:field="quantity" th:value="" required>\n' +
+        '                                <input type="text" class="form-control" id="productQty" name="quantity" required>\n' +
         '                            </div>\n' +
         '                            <div class="col-md-4">\n' +
         '                                <label for="productMrp" class="control-label mb-1">MRP</label>\n' +
-        '                                <input type="text" class="form-control" id="productMrp" th:field="mrp" th:value=""required>\n' +
+        '                                <input type="text" class="form-control" id="productMrp" name="mrp" required>\n' +
         '                            </div>\n' +
         '                            <div class="col-md-4">\n' +
         '                                <label for="productPrice" class="control-label mb-1">Price</label>\n' +
-        '                                <input type="text" class="form-control" id="productPrice" th:field="price" th:value="" required>\n' +
+        '                                <input type="text" class="form-control" id="productPrice" name="price" required>\n' +
         '                            </div>\n' +
         '                            <div class="col-md-4 mt-4">\n' +
         '                                <label class="control-label mb-1">Action</label>\n' +
@@ -140,5 +161,16 @@
     }
     function remove_more(loop_count){
         jQuery('#product_attr_'+loop_count).remove();
+    }
+    $('#productImage').change(function (){
+       showThumbnailImage(this);
+    });
+    function showThumbnailImage(fileInput){
+        file = fileInput.files[0];
+        reader = new FileReader();
+        reader.onload = function (e){
+          $('.thumbnail').attr('src',e.target.result);
+        };
+        reader.readAsDataURL(file);
     }
 </script>

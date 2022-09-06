@@ -4,6 +4,7 @@ import com.sbmsangam.project1.project1.product.Product;
 import com.sbmsangam.project1.project1.size.Size;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "product_attributes")
@@ -24,6 +25,7 @@ public class ProductAttribute {
     @ManyToOne
     @JoinColumn(name = "size_id")
     private Size size;
+
 
 
 
@@ -99,6 +101,7 @@ public class ProductAttribute {
                 ", price=" + price +
                 ", mrp=" + mrp +
                 ", quantity=" + quantity +
+                ", size=" + size +
                 '}';
     }
 }

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Manage Products</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
 </head>
 <body>
@@ -33,6 +34,7 @@
                 <th>Short Description</th>
                 <th>Product Detail</th>
                 <th>Brand</th>
+                <th>Image</th>
                 <th>Status</th>
                 <th></th>
             </tr>
@@ -42,9 +44,13 @@
                     <tr>
                         <td>[[${product.id}]]</td>
                         <td>[[${product.name}]]</td>
-                        <td>[[${product.sdesc}]]</td>
-                        <td>[[${product.detail}]]</td>
+                        <td th:utext="${product.sdesc}"></td>
+                        <td th:utext="${product.detail}"></td>
                         <td>[[${product.brand}]]</td>
+                        <td class="p-image">
+                            <img class="thumbnail" th:src="@{${product.imagePath}}" alt="Image Preview">
+
+                        </td>
                         <td th:switch="${product.status}">
                             <button th:case=true type="button" class="btn btn-success">Active</button>
                             <button th:case=false type="button" class="btn btn-danger">Deactive</button>

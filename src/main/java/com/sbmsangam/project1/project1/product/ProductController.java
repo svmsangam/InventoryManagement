@@ -11,14 +11,22 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Controller
@@ -73,14 +81,30 @@ public class ProductController {
         model.addAttribute("sizeList",sizeList);
         model.addAttribute("brandList",brandList);
         model.addAttribute("product",new Product());
-        model.addAttribute("attribute", new ProductAttribute());
+        model.addAttribute("attribute",new ProductAttribute());
         model.addAttribute("pageTitle","Create Product");
         model.addAttribute("buttonName","Add");
         return "product_create";
     }
     @PostMapping("/product/save")
-    public String saveProduct(Product product, RedirectAttributes ra, ProductAttribute attribute){
-        service.save(product);
+    public String saveProduct(Product product,
+                              RedirectAttributes ra, ProductAttribute attribute,
+                              @RequestParam("fileImage") MultipartFile multipartFile) throws IOException {
+        String filename = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        System.out.println(filename);
+        product.setImage(filename);
+        Product savedProduct = service.save(product);
+        String uploadDir = "./product-image/"+savedProduct.getId();
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+        try(InputStream inputStream = multipartFile.getInputStream()) {
+            Path filePath = uploadPath.resolve(filename);
+            Files.copy(inputStream,filePath, StandardCopyOption.REPLACE_EXISTING);
+        }catch (IOException e){
+            throw new IOException("Image upload failed");
+        }
         attribute.setProduct(product);
         productAttributeService.save(attribute);
         ra.addFlashAttribute("message","Product has been added successfully");
@@ -90,7 +114,7 @@ public class ProductController {
     public String showEditForm(@PathVariable("id") Integer id, Model model, RedirectAttributes ra){
         try{
             Product product = service.get(id);
-            ProductAttribute attribute = productAttributeService.getProductAttributeByProduct(product);
+            ProductAttribute attribute= productAttributeService.getProductAttributeByProduct(product);
             List<Size> sizeList = sizeService.listAll();
             List<Brand> brandList = brandService.listAll();
             model.addAttribute("sizeList",sizeList);
