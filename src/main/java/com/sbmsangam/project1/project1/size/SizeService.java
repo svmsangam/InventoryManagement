@@ -30,5 +30,8 @@ public class SizeService {
         }
         repo.deleteById(id);
     }
+    public Size findById(Integer id){
+        return repo.findSizeById(id);
+    }
 
 }

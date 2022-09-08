@@ -35,7 +35,7 @@ public class ProductAttributeTest {
 
         @Test
         public void testProduct(){
-            Product product = new Product("Product1","Product1","Product1",false);
+            Product product = new Product("Product1","Product1","Product1",false,null);
             pRepo.save(product);
         }
 
@@ -43,7 +43,7 @@ public class ProductAttributeTest {
         public void testProdAttribAdd(){
             Product product = entityManager.find(Product.class,1);
             Size size = entityManager.find(Size.class,1);
-            ProductAttribute productAttribute = new ProductAttribute(100,110,20,product,size);
+            ProductAttribute productAttribute = new ProductAttribute("100","110","20",product,size);
             prodAttributeRepo.save(productAttribute);
 
         }

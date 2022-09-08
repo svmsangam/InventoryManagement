@@ -3,7 +3,9 @@ package com.sbmsangam.project1.project1.size;
 import com.sbmsangam.project1.project1.attributes.ProductAttribute;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,8 +21,8 @@ public class Size {
     private boolean status;
 
 
-    @OneToMany(mappedBy = "size")
-    Set<ProductAttribute> productAttributes = new HashSet<>();
+    @OneToMany(mappedBy = "size",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    List<ProductAttribute> attribute = new ArrayList<>();
 
 
     public Size() {
@@ -64,11 +66,11 @@ public class Size {
                 ", status=" + status +
                 '}';
     }
-    public Set<ProductAttribute> getProductAttributes() {
-        return productAttributes;
+    public List<ProductAttribute> getProductAttributes() {
+        return attribute;
     }
 
-    public void setProductAttributes(Set<ProductAttribute> productAttributes) {
-        this.productAttributes = productAttributes;
+    public void setProductAttributes(List<ProductAttribute> productAttributes) {
+        this.attribute = productAttributes;
     }
 }

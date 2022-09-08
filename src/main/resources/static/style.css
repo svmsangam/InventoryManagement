@@ -95,3 +95,6 @@ ul ul a {
 .p-image img.thumbnail{
     width: 100px !important;
 }
+.product_details p{
+    color: #000000;
+}

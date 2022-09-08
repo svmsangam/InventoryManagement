@@ -44,8 +44,8 @@
                     <tr>
                         <td>[[${product.id}]]</td>
                         <td>[[${product.name}]]</td>
-                        <td th:utext="${product.sdesc}"></td>
-                        <td th:utext="${product.detail}"></td>
+                        <td class="product_details" th:utext="${product.sdesc}"></td>
+                        <td class="product_details" th:utext="${product.detail}"></td>
                         <td>[[${product.brand}]]</td>
                         <td class="p-image">
                             <img class="thumbnail" th:src="@{${product.imagePath}}" alt="Image Preview">

@@ -13,12 +13,12 @@ public class ProductAttribute {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(nullable = false)
-    private float price;
-    @Column(nullable = false)
-    private float mrp;
-    @Column(nullable = false)
-    private Integer quantity;
+    @Column(length = 50,nullable = false)
+    private String price;
+    @Column(length = 50,nullable = false)
+    private String mrp;
+    @Column(length = 50,nullable = false)
+    private String quantity;
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
@@ -32,14 +32,24 @@ public class ProductAttribute {
     public ProductAttribute() {
     }
 
-    public ProductAttribute(float price, float mrp, Integer quantity) {
+    public ProductAttribute(String price, String mrp, String quantity) {
         super();
         this.price = price;
         this.mrp = mrp;
         this.quantity = quantity;
     }
-    public ProductAttribute( float price, float mrp, Integer quantity, Product product, Size size) {
+    public ProductAttribute( String price, String  mrp, String quantity, Product product, Size size) {
         super();
+        this.price = price;
+        this.mrp = mrp;
+        this.quantity = quantity;
+        this.product = product;
+        this.size = size;
+    }
+
+    public ProductAttribute(Integer id, String price, String mrp, String quantity, Product product, Size size) {
+        super();
+        this.id = id;
         this.price = price;
         this.mrp = mrp;
         this.quantity = quantity;
@@ -55,27 +65,27 @@ public class ProductAttribute {
         this.id = id;
     }
 
-    public float getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
-    public float getMrp() {
+    public String getMrp() {
         return mrp;
     }
 
-    public void setMrp(float mrp) {
+    public void setMrp(String mrp) {
         this.mrp = mrp;
     }
 
-    public Integer getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 

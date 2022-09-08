@@ -4,9 +4,12 @@ package com.sbmsangam.project1.project1.product;
 
 import com.sbmsangam.project1.project1.attributes.ProductAttribute;
 import com.sbmsangam.project1.project1.brand.Brand;
+import com.sbmsangam.project1.project1.size.Size;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -27,19 +30,22 @@ public class Product {
     @Column(length = 45,nullable = true)
     private String image;
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    Set<ProductAttribute> productAttribute = new HashSet<>();
+    List<ProductAttribute> attribute = new ArrayList<>();
+
+
     @OneToOne
     @JoinColumn(name = "brand_id",referencedColumnName = "id")
     private Brand brand;
     public Product() {
     }
 
-    public Product(String name, String shortDesc, String detail, Boolean status) {
+    public Product(String name, String shortDesc, String detail, Boolean status,String image) {
         super();
         this.name = name;
         this.sdesc = shortDesc;
         this.detail = detail;
         this.status = status;
+        this.image = image;
     }
     public Integer getId() {
         return id;
@@ -86,13 +92,12 @@ public class Product {
     public void setImage(String image) {
         this.image = image;
     }
-
-    public Set<ProductAttribute> getProductAttribute() {
-        return productAttribute;
+    public List<ProductAttribute> getAttribute() {
+        return attribute;
     }
 
-    public void setProductAttribute(Set<ProductAttribute> productAttribute) {
-        this.productAttribute = productAttribute;
+    public void setAttribute(List<ProductAttribute> attribute) {
+        this.attribute = attribute;
     }
     public Brand getBrand() {
         return brand;
@@ -117,5 +122,12 @@ public class Product {
                 ", detail='" + detail + '\'' +
                 ", status=" + status +
                 '}';
+    }
+
+    public void addAttributes(Size size,String quantity,String mrp,String price){
+        this.attribute.add(new ProductAttribute(price,mrp,quantity,this,size));
+    }
+    public void updateAttribute(Integer id,String price, String mrp, String quantity,Size size ){
+        this.attribute.add(new ProductAttribute(id,price,mrp,quantity,this,size));
     }
 }

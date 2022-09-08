@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -76,37 +77,67 @@ public class ProductController {
     }
     @GetMapping("/product/create")
     public String showCreateProduct(Model model){
+        Product product = new Product();
         List<Size> sizeList = sizeService.listAll();
         List<Brand> brandList = brandService.listAll();
         model.addAttribute("sizeList",sizeList);
         model.addAttribute("brandList",brandList);
-        model.addAttribute("product",new Product());
-        model.addAttribute("attribute",new ProductAttribute());
+        model.addAttribute("product",product);
+//        model.addAttribute("attribute",attributes);
         model.addAttribute("pageTitle","Create Product");
         model.addAttribute("buttonName","Add");
         return "product_create";
     }
     @PostMapping("/product/save")
     public String saveProduct(Product product,
-                              RedirectAttributes ra, ProductAttribute attribute,
-                              @RequestParam("fileImage") MultipartFile multipartFile) throws IOException {
+                              RedirectAttributes ra,
+                              @RequestParam("fileImage") MultipartFile multipartFile,
+                            HttpServletRequest request) throws IOException, ProductNotFoundException {
+        Integer productId = product.getId();
+        String productImage = null;
+        if(productId > 0) {
+            Product product1 = service.get(productId);
+            productImage = product1.getImage();
+        }
+        String[] attributeId = request.getParameterValues("attributeId");
+        String[] attrQty = request.getParameterValues("attrQty");
+        String[] attrMrp = request.getParameterValues("attrMrp");
+        String[] attrPrice = request.getParameterValues("attrPrice");
+        String[] attrSize = request.getParameterValues("attrSize");
+        Integer l = attrQty.length;
+        for (int i = 0; i < attrQty.length; i++) {
+            Size size = sizeService.findById((Integer.parseInt(attrSize[i])));
+            if (attributeId[i] != null && attributeId[i].length() > 0) {
+                product.updateAttribute(Integer.parseInt(attributeId[i]), attrPrice[i], attrMrp[i], attrQty[i], size);
+//                ra.addFlashAttribute("message","Product Updated");
+//                return "redirect:/product/edit/"+productId;
+            } else {
+                product.addAttributes(size, attrQty[i], attrMrp[i], attrPrice[i]);
+            }
+        }
         String filename = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        System.out.println(filename);
-        product.setImage(filename);
+        if (!multipartFile.isEmpty()) {
+            product.setImage(filename);
+        } else {
+            product.setImage(productImage);
+        }
+
         Product savedProduct = service.save(product);
-        String uploadDir = "./product-image/"+savedProduct.getId();
-        Path uploadPath = Paths.get(uploadDir);
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
+        if(!multipartFile.isEmpty()) {
+            String uploadDir = "./product-image/" + savedProduct.getId();
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            } else {
+
+            }
+            try (InputStream inputStream = multipartFile.getInputStream()) {
+                Path filePath = uploadPath.resolve(filename);
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                throw new IOException("Image upload failed");
+            }
         }
-        try(InputStream inputStream = multipartFile.getInputStream()) {
-            Path filePath = uploadPath.resolve(filename);
-            Files.copy(inputStream,filePath, StandardCopyOption.REPLACE_EXISTING);
-        }catch (IOException e){
-            throw new IOException("Image upload failed");
-        }
-        attribute.setProduct(product);
-        productAttributeService.save(attribute);
         ra.addFlashAttribute("message","Product has been added successfully");
         return "redirect:/products";
     }
@@ -114,13 +145,11 @@ public class ProductController {
     public String showEditForm(@PathVariable("id") Integer id, Model model, RedirectAttributes ra){
         try{
             Product product = service.get(id);
-            ProductAttribute attribute= productAttributeService.getProductAttributeByProduct(product);
             List<Size> sizeList = sizeService.listAll();
             List<Brand> brandList = brandService.listAll();
             model.addAttribute("sizeList",sizeList);
             model.addAttribute("brandList",brandList);
             model.addAttribute("product",product);
-            model.addAttribute("attribute",attribute);
             model.addAttribute("pageTitle","Edit Product");
             model.addAttribute("buttonName","Update");
             return "product_create";

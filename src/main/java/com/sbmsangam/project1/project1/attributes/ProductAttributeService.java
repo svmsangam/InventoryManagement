@@ -37,7 +37,7 @@ public class ProductAttributeService {
         }
         repo.deleteById(id);
     }
-    public ProductAttribute getProductAttributeByProduct(Product product){
+    public List<ProductAttribute> getProductAttributeByProduct(Product product){
         return repo.getProductAttributesByProduct(product);
     }
 
