@@ -2,6 +2,9 @@ package com.sbmsangam.project1.project1.attributes;
 
 import com.sbmsangam.project1.project1.product.Product;
 import com.sbmsangam.project1.project1.size.Size;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.List;
@@ -20,6 +23,7 @@ public class ProductAttribute {
     @Column(length = 50,nullable = false)
     private String quantity;
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "product_id")
     private Product product;
     @ManyToOne

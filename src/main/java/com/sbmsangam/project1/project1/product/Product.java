@@ -8,9 +8,7 @@ import com.sbmsangam.project1.project1.size.Size;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @Entity
@@ -25,11 +23,12 @@ public class Product {
     private String sdesc;
     @Column(columnDefinition = "TEXT",nullable = false)
     private String detail;
+
     @Column(columnDefinition = "boolean default false",nullable = false)
     private Boolean status;
     @Column(length = 45,nullable = true)
     private String image;
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product" ,cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     List<ProductAttribute> attribute = new ArrayList<>();
 
 
@@ -129,5 +128,9 @@ public class Product {
     }
     public void updateAttribute(Integer id,String price, String mrp, String quantity,Size size ){
         this.attribute.add(new ProductAttribute(id,price,mrp,quantity,this,size));
+    }
+    public void removeAttribute(ProductAttribute productAttribute){
+        this.attribute.remove(productAttribute);
+//        productAttribute.getProduct().remove(this);
     }
 }

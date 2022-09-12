@@ -5,6 +5,7 @@
     <title>Manage Products</title>
     <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <script th:src="@{/webjars/jquery/jquery.js}"></script>
 </head>
 <body>
 <div class="container-fluid text-center">
@@ -45,7 +46,7 @@
                         <td>[[${product.id}]]</td>
                         <td>[[${product.name}]]</td>
                         <td class="product_details" th:utext="${product.sdesc}"></td>
-                        <td class="product_details" th:utext="${product.detail}"></td>
+                        <td class="product_details markdown_data" th:utext="${product.detail}"></td>
                         <td>[[${product.brand}]]</td>
                         <td class="p-image">
                             <img class="thumbnail" th:src="@{${product.imagePath}}" alt="Image Preview">
@@ -89,6 +90,11 @@
 </div>
 </body>
 <script type="text/javascript">
+    $(document).ready(function () {
+        $('.markdown_data table').css({"border":"1px solid"});
+        $('.markdown_data th').css({"border":"1px solid"});
+        $('.markdown_data td').css({"border":"1px solid"});
+    });
     function clearFilter(){
         window.location = '/products';
     }

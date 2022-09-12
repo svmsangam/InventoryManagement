@@ -5,10 +5,8 @@
     <title>[[${pageTitle}]]</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
-<!--    <link rel="stylesheet" type="text/css" th:href="@{/richtext/richtext.min.css}">-->
-<!--    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">-->
-<!--    <script th:src="@{custom.js}"></script>-->
-    <script th:src="@{/webjars/jquery/jquery.js}"></script>
+
+    <script th:src="@{/custom.js}"></script>
     <script th:src="@{/webjars/jquery/jquery.js}"></script>
     <script th:src="@{/ckeditor/ckeditor.js}"></script>
 </head>
@@ -32,10 +30,9 @@
                 </textarea>
             </div>
             <div class="col-md-12 mb-2 form-floating">
-                <textarea class="form-control text_area_editor"
-                          id="floatingTextareaDetail" th:field="${product.detail}" style="height: 100px" required>
+                <textarea class="form-control"
+                          id="floatingTextareaDetail" th:field="${product.detail}" style="height: 100px">
                 </textarea>
-                <label for="floatingTextareaDetail">Product Details</label>
             </div>
             <label class="col-form-label">Brand</label>
             <div class="col-md-12 mb-2">
@@ -148,12 +145,25 @@
         <input type="hidden" th:field="${product.id}">
     </form>
 </div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 </body>
 </html>
 <script>
+    var simplemde = new SimpleMDE({
+        element: document.getElementById("floatingTextareaDetail"),
+        toolbar:["bold","ordered-list","unordered-list","link","table","preview","italic"],
+        hideIcons: ["guide", "heading","quote","image","fullscreen","side-by-side"],
+        placeholder: "Add Product Details here...",
+        spellChecker:false,
+        // blockStyles: {
+        //     bold: "__",
+        // },
+
+
+    });
     $(document).ready(function () {
         CKEDITOR.replace( 'sdesc' );
-        CKEDITOR.replace( 'detail' );
     });
     $("#flexSwitch").change(function() {
         if(this.checked) {
@@ -162,61 +172,8 @@
             $('.checkboxLabel').html("Deactivate");
         }
     });
+
     function cancelForm(){
-        window.location = "[[@{/products}]]"
-    }
-    let count = 1;
-    function add_more(){
-        count++;
-        console.log(count);
-        let html='<input type="hidden" name="attributeId">' +
-        '       <div class="card mb-2" id="product_attr_'+count+'">\n' +
-        '                <div class="card-body">\n' +
-        '                    <div class="form-group">\n' +
-        '                        <div class="row">\n' ;
-        let productSize = jQuery('.productSize').html();
-        productSize = productSize.replace("selected","");
-        html+=                           '<div class="col-md-4">\n'+
-        '                                <label class="control-label mb-1"> Size</label>\n'+
-        '                                <select class="form-control productSize" name="attrSize">\n' +
-                                            productSize +
-        '                                </select>\n' +
-        '                            </div>\n' +
-        '                            <div class="col-md-4">\n' +
-        '                                <label class="control-label mb-1">Quantity</label>\n' +
-        '                                <input type="text" class="form-control productQty"  name="attrQty" required>\n' +
-        '                            </div>\n' +
-        '                            <div class="col-md-4">\n' +
-        '                                <label class="control-label mb-1">MRP</label>\n' +
-        '                                <input type="text" class="form-control productMrp"  name="attrMrp" required>\n' +
-        '                            </div>\n' +
-        '                            <div class="col-md-4">\n' +
-        '                                <label  class="control-label mb-1">Price</label>\n' +
-        '                                <input type="text" class="form-control productPrice"  name="attrPrice" required>\n' +
-        '                            </div>\n' +
-        '                            <div class="col-md-4 mt-4">\n' +
-        '                                <label class="control-label mb-1">Action</label>\n' +
-        '                                <button type="button" class="btn btn-danger btn-md" onclick=remove_more("'+count+'")>\n' +
-        '                                    <i class="fa fa-plus">&nbsp;Remove</i></button>\n' +
-        '                            </div>\n' +
-        '                        </div>\n' +
-        '                    </div>\n' +
-        '                </div>\n' +
-        '            </div>';
-        jQuery('#product_attr_box').append(html);
-    }
-    function remove_more(loop_count){
-        jQuery('#product_attr_'+loop_count).remove();
-    }
-    $('#productImage').change(function (){
-       showThumbnailImage(this);
-    });
-    function showThumbnailImage(fileInput){
-        file = fileInput.files[0];
-        reader = new FileReader();
-        reader.onload = function (e){
-          $('.thumbnail').attr('src',e.target.result);
-        };
-        reader.readAsDataURL(file);
+        window.location = "[[@{/products}]]";
     }
 </script>

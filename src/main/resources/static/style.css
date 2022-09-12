@@ -98,3 +98,7 @@ ul ul a {
 .product_details p{
     color: #000000;
 }
+
+b, strong {
+    font-weight: 600 !important;
+}

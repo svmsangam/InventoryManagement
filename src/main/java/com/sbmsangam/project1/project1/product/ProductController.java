@@ -1,11 +1,14 @@
 package com.sbmsangam.project1.project1.product;
 
 import com.sbmsangam.project1.project1.attributes.ProductAttribute;
+import com.sbmsangam.project1.project1.attributes.ProductAttributeNotFoundException;
 import com.sbmsangam.project1.project1.attributes.ProductAttributeService;
 import com.sbmsangam.project1.project1.brand.Brand;
 import com.sbmsangam.project1.project1.brand.BrandService;
+import com.sbmsangam.project1.project1.markdown.HTMLService;
 import com.sbmsangam.project1.project1.size.Size;
 import com.sbmsangam.project1.project1.size.SizeService;
+import com.sbmsangam.project1.project1.markdown.HTMLServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -24,10 +27,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
 
 
 @Controller
@@ -36,7 +37,7 @@ public class ProductController {
     @Autowired private SizeService sizeService;
     @Autowired private ProductAttributeService productAttributeService;
     @Autowired private BrandService brandService;
-
+    @Autowired HTMLService htmlService;
     @GetMapping("/products")
     public String showProductList(Model model,@Param("name") String name){
         if(name !=null) {
@@ -50,8 +51,10 @@ public class ProductController {
              @PathVariable("keyword") String keyword
             )
     {
+
         Page<Product> page= service.listAllSearch(currentPage,keyword);
         List<Product> productList = page.getContent();
+
         long totalItems = page.getTotalElements();
         int totalPages = page.getTotalPages();
         model.addAttribute("productList",productList);
@@ -67,6 +70,10 @@ public class ProductController {
     {
         Page<Product> page = service.listAll(currentPage);
         List<Product> productList = page.getContent();
+        for (Product product: productList) {
+                product.setDetail(htmlService.markdownToHtml(product.getDetail()));
+                model.addAttribute("product", product);
+        }
         long totalItems = page.getTotalElements();
         int totalPages = page.getTotalPages();
         model.addAttribute("productList",productList);
@@ -95,7 +102,7 @@ public class ProductController {
                             HttpServletRequest request) throws IOException, ProductNotFoundException {
         Integer productId = product.getId();
         String productImage = null;
-        if(productId > 0) {
+        if(productId !=null) {
             Product product1 = service.get(productId);
             productImage = product1.getImage();
         }
@@ -107,7 +114,7 @@ public class ProductController {
         Integer l = attrQty.length;
         for (int i = 0; i < attrQty.length; i++) {
             Size size = sizeService.findById((Integer.parseInt(attrSize[i])));
-            if (attributeId[i] != null && attributeId[i].length() > 0) {
+            if (attributeId != null && attributeId[i] != null && attributeId[i].length() > 0) {
                 product.updateAttribute(Integer.parseInt(attributeId[i]), attrPrice[i], attrMrp[i], attrQty[i], size);
 //                ra.addFlashAttribute("message","Product Updated");
 //                return "redirect:/product/edit/"+productId;
@@ -166,6 +173,8 @@ public class ProductController {
             ra.addFlashAttribute("message","Product Deleted");
         }catch (ProductNotFoundException e){
             ra.addFlashAttribute("message",e.getMessage());
+        } catch (ProductAttributeNotFoundException e) {
+            e.printStackTrace();
         }
         return "redirect:/products";
     }
