@@ -28,12 +28,11 @@ public class Product {
     private Boolean status;
     @Column(length = 45,nullable = true)
     private String image;
-    @OneToMany(mappedBy = "product" ,cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product" ,cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)
     List<ProductAttribute> attribute = new ArrayList<>();
 
 
-    @OneToOne
-    @JoinColumn(name = "brand_id",referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.EAGER)
     private Brand brand;
     public Product() {
     }

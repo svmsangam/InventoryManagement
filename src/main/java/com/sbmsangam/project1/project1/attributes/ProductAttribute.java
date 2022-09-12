@@ -22,12 +22,9 @@ public class ProductAttribute {
     private String mrp;
     @Column(length = 50,nullable = false)
     private String quantity;
-    @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "product_id")
+    @ManyToOne(fetch = FetchType.EAGER)
     private Product product;
-    @ManyToOne
-    @JoinColumn(name = "size_id")
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Size size;
 
 

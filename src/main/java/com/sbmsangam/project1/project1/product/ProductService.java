@@ -2,6 +2,7 @@ package com.sbmsangam.project1.project1.product;
 
 import com.sbmsangam.project1.project1.attributes.ProductAttribute;
 import com.sbmsangam.project1.project1.attributes.ProductAttributeNotFoundException;
+import com.sbmsangam.project1.project1.attributes.ProductAttributeRepository;
 import com.sbmsangam.project1.project1.attributes.ProductAttributeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,8 @@ import java.util.Set;
 public class ProductService {
     @Autowired private ProductRepository repo;
     @Autowired ProductAttributeService service;
+    @Autowired
+    ProductAttributeRepository attributeRepository;
 
     public Page<Product> listAll(int pageNumber){
         Pageable pageable = PageRequest.of(pageNumber - 1,5);
@@ -37,15 +40,6 @@ public class ProductService {
     }
 
     public void delete(Integer id) throws ProductNotFoundException, ProductAttributeNotFoundException {
-        Long count = repo.countById(id);
-        if(count==0 || count == null){
-            throw new ProductNotFoundException("Could not find the product.");
-        }
-        Product product = get(id);
-        List<ProductAttribute> attributes = service.getProductAttributeByProduct(product);
-        for (ProductAttribute attribute: attributes) {
-           product.removeAttribute(attribute);
-        }
         repo.deleteById(id);
     }
     public Page<Product> listAllSearch(int pageNumber,String keyword){

@@ -25,7 +25,6 @@ public class HTMLServiceImpl implements HTMLService {
                     .build();
 
             return renderer.render(document);
-
     }
 
     @Override
